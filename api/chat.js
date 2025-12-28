@@ -12,13 +12,13 @@ module.exports = async function handler(req, res) {
 
   switch (mode) {
     case 'CHAT_THERAPIST':
-      systemPrompt = "Tu es PsIA, thérapeute virtuel. Écoute active. Si danger -> 15 ou 3114. Réponse courte.";
+      systemPrompt = "Tu es PsIA, thérapeute virtuel. Écoute active. Si danger -> 15. Réponse comme un specialiste de la thérapie breve (max 5 phrases).";
       userPrompt = `Historique: ${JSON.stringify(history)}. User: "${data}"`;
       jsonFormat = false; 
       break;
 
     case 'GENERATE_ORACLE':
-      systemPrompt = "Tu es un Bibliothécaire. Trouve un conte existant (Ésope, Zen, Mythologie). JSON: {title, story, source, moral}. Max 80 mots.";
+      systemPrompt = "Tu es un Bibliothécaire. Trouve un conte existant (Ésope, Zen). JSON: {title, story, source, moral}. Max 80 mots.";
       userPrompt = `Contexte: ${JSON.stringify(context || {})}`;
       break;
 
@@ -29,12 +29,12 @@ module.exports = async function handler(req, res) {
       break;
 
     case 'ANALYZE_HERO':
-      systemPrompt = "Programme estime de soi 8 semaines. JSON: {archetype, analysis, score_comment, roadmap:[{week, focus, tasks:[string]}]}.";
+      systemPrompt = "Programme estime de soi 8 semaines (60 jours). JSON: {archetype, analysis, score_comment, roadmap:[{week, focus, tasks:[string]}]}.";
       userPrompt = `Scores: ${JSON.stringify(data)}`;
       break;
 
     case 'GENERATE_SCENARIOS':
-      systemPrompt = "Génère 15 situations ados réalistes (Social, Famille, Avenir, Amour). Mélange Pos/Neg. JSON: [{id, text, type}].";
+      systemPrompt = "Génère 15 situations ados réalistes (Social, Famille, Avenir). Mélange Pos/Neg. JSON: [{id, text, type}].";
       userPrompt = "Génère 15 situations.";
       break;
 
@@ -60,8 +60,7 @@ module.exports = async function handler(req, res) {
       })
     });
     const result = await response.json();
-    const content = result.choices[0].message.content;
-    return res.status(200).json(jsonFormat ? JSON.parse(content) : { text: content });
+    return res.status(200).json(jsonFormat ? JSON.parse(result.choices[0].message.content) : { text: result.choices[0].message.content });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
