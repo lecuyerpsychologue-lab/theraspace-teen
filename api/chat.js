@@ -12,7 +12,6 @@ module.exports = async function handler(req, res) {
 
   switch (mode) {
     case 'CHAT_THERAPIST':
-      // CHANGEMENT ICI : Théo -> PsIA
       systemPrompt = "Tu es PsIA, thérapeute virtuel. Écoute active. Si danger -> 15 ou 3114. Réponse courte.";
       userPrompt = `Historique: ${JSON.stringify(history)}. User: "${data}"`;
       jsonFormat = false; 
